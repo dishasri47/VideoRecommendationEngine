@@ -1,6 +1,6 @@
 import requests
 
-API_KEY = "AIzaSyDmHN6xHv6ECar8i4D_XywiEIhps_Y7xKg"  # Your YouTube API key
+API_KEY = "Your YouTube API key"  # Your YouTube API key
 YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search"
 
 def get_youtube_recommendations(query):
