@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2C003E;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #D4A1FF;
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #9C27B0;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #7B1FA2;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        p {
+            font-size: 18px;
+        }
+        a {
+            color: #FFCDD2;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎬 YouTube Video Recommendation Engine</h1>
+    
+    <form id="searchForm">
+        <input type="text" id="query" placeholder="Enter video title..." required>
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let query = document.getElementById("query").value;
+            let resultsDiv = document.getElementById("results");
+
+            resultsDiv.innerHTML = "<p>🔍 Searching...</p>";
+
+            fetch("/recommend", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "query=" + encodeURIComponent(query)
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultsDiv.innerHTML = "";
+                if (data.error) {
+                    resultsDiv.innerHTML = `<p style="color:red;">❌ ${data.error}</p>`;
+                } else {
+                    data.forEach(video => {
+                        resultsDiv.innerHTML += `<p>📺 <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank">${video.title}</a></p>`;
+                    });
+                }
+            })
+            .catch(error => {
+                resultsDiv.innerHTML = `<p style="color:red;">⚠️ Error fetching recommendations</p>`;
+            });
+        });
+    </script>
+
+</body>
+</html>
